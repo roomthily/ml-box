@@ -33,9 +33,25 @@ class python {
 }
 
 class nltk {
-	
+	exec {
+		"numpy":
+		command => "/usr/bin/sudo pip install numpy",
+		require => Package["python", "python-pip"]
+	} ->
+	exec {
+		"nltk":
+		command => "/usr/bin/sudo pip install nltk",
+		require => Package["python", "python-pip"]
+	}
 }
 
 include core
 include python
 include nltk
+
+#sudo apt-get update
+#sudo apt-get install build-essential
+#sudo apt-get install python-setuptools python-pip python-dev
+#sudo pip install ipython
+#sudo pip install -U numpy
+#sudo pip install -U nltk
