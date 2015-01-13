@@ -1,6 +1,6 @@
 Vagrant.configure("2") do |config|
 
-	config.vm.box = "puppet_box_python"	
+	config.vm.box = "ml-nltk-box"	
 	config.vm.box_url = "http://puppet-vagrant-boxes.puppetlabs.com/ubuntu-1310-x64-virtualbox-nocm.box"
 
 	if defined? VagrantVbguest
