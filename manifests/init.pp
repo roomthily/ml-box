@@ -14,7 +14,7 @@ class core {
 class python {
 
     package { 
-      [ "python", "python-setuptools", "python-dev", "python-pip"]:
+      [ "python", "python-setuptools", "python-dev", "python-pip", "python-matplotlib"]:
         ensure => ["installed"],
         require => Exec['apt-update']    
     }
@@ -30,6 +30,7 @@ class python {
       command => "/usr/bin/sudo pip install requests",
       require => Package["python", "python-pip"],
     }
+
 }
 
 class nltk {
@@ -45,9 +46,34 @@ class nltk {
 	}
 }
 
+class scikit {
+  package { 
+    [ "python-scipy", "libatlas-dev", "libatlas3gf-base"]:
+      ensure => ["installed"],
+      require => Exec['apt-update']    
+  } ->
+  exec {
+    "libblas":
+    command => "/usr/bin/sudo update-alternatives --set libblas.so.3 /usr/lib/atlas-base/atlas/libblas.so.3"
+  } ->
+  exec {
+    "liblapack":
+    command => "/usr/bin/sudo update-alternatives --set liblapack.so.3 /usr/lib/atlas-base/atlas/liblapack.so.3"
+  } ->
+  exec {
+    "scikit":
+    command => "/usr/bin/sudo pip install scikit-learn",
+    require => Package["python", "python-pip"]
+  }
+
+}
+
+
+
 include core
 include python
 include nltk
+include scikit
 
 #sudo apt-get update
 #sudo apt-get install build-essential
@@ -55,3 +81,13 @@ include nltk
 #sudo pip install ipython
 #sudo pip install -U numpy
 #sudo pip install -U nltk
+#FOR THE DATA
+#sudo python -m nltk.downloader all -d /usr/share/nlkt_data.all
+#for scikit-learn which may be unnecessary but isn't going to hurt
+#sudo apt-get install python-scipy libatlas-dev libatlas3gf-base
+#for ubuntu 13 >
+#sudo update-alternatives --set libblas.so.3 /usr/lib/atlas-base/atlas/libblas.so.3
+#sudo update-alternatives --set liblapack.so.3 /usr/lib/atlas-base/atlas/liblapack.so.3
+#install it
+#sudo pip install scikit-learn
+#sudo apt-get install python-matplotlib
